@@ -1,0 +1,55 @@
+apiVersion: charlescd.zup.me/v1
+kind: Circle
+metadata:
+  name: circle-name
+  labels:
+    circleId: "12312"
+    deploymentId: "456"
+    fallbackCircle: fallback-id
+    mesh: "ambassador"
+spec:
+  components:
+    - name: quiz-app-backend
+      metadata:
+        name: quiz-app-backend
+        namespace: default
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: quote2
+        strategy:
+          type: RollingUpdate
+        template:
+          metadata:
+            labels:
+              app: quote2
+          spec:
+            containers:
+            - name: backend
+              image: docker.io/datawire/quote:0.4.1
+              ports:
+              - name: http
+                containerPort: 9090
+    - name: quiz-app-front
+      metadata:
+        name: quiz-app-front
+        namespace: default
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: quote1
+        strategy:
+          type: RollingUpdate
+        template:
+          metadata:
+            labels:
+              app: quote1
+          spec:
+            containers:
+            - name: front
+              image: docker.io/datawire/quote:0.4.1
+              ports:
+              - name: http
+                containerPort: 8080

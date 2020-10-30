@@ -1,0 +1,6 @@
+apiVersion: hello-operator.zup.me/v1
+kind: Greeting
+metadata:
+  name: "first-greeting"
+spec:
+  name: "Name denovo??"

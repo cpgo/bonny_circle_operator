@@ -1,0 +1,161 @@
+---
+{
+  "apiVersion": "apiextensions.k8s.io/v1beta1",
+  "kind": "CustomResourceDefinition",
+  "metadata": {
+    "labels": {
+      "k8s-app": "hello-operator"
+    },
+    "name": "greetings.greetings-operator.your-domain.com"
+  },
+  "spec": {
+    "additionalPrinterColumns": [],
+    "group": "greetings-operator.your-domain.com",
+    "names": {
+      "kind": "Greeting",
+      "plural": "greetings",
+      "shortNames": [],
+      "singular": "greeting"
+    },
+    "scope": "Namespaced",
+    "version": "v1"
+  }
+}
+---
+{
+  "apiVersion": "apiextensions.k8s.io/v1beta1",
+  "kind": "CustomResourceDefinition",
+  "metadata": {
+    "labels": {
+      "k8s-app": "hello-operator"
+    },
+    "name": "circles.charlescd.zup.me"
+  },
+  "spec": {
+    "additionalPrinterColumns": [],
+    "group": "charlescd.zup.me",
+    "names": {
+      "kind": "Circle",
+      "plural": "circles",
+      "shortNames": [],
+      "singular": "circle"
+    },
+    "scope": "Namespaced",
+    "version": "v1"
+  }
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRole",
+  "metadata": {
+    "labels": {
+      "k8s-app": "hello-operator"
+    },
+    "name": "hello-operator"
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        "apiextensions.k8s.io"
+      ],
+      "resources": [
+        "customresourcedefinitions"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        "greetings-operator.your-domain.com"
+      ],
+      "resources": [
+        "greetings"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        "charlescd.zup.me"
+      ],
+      "resources": [
+        "circles"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        ""
+      ],
+      "resources": [
+        "secrets"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        ""
+      ],
+      "resources": [
+        "pods",
+        "configmap"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        "apps"
+      ],
+      "resources": [
+        "deployments"
+      ],
+      "verbs": [
+        "*"
+      ]
+    }
+  ]
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "labels": {
+      "k8s-app": "hello-operator"
+    },
+    "name": "hello-operator",
+    "namespace": "default"
+  }
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRoleBinding",
+  "metadata": {
+    "labels": {
+      "k8s-app": "hello-operator"
+    },
+    "name": "hello-operator"
+  },
+  "roleRef": {
+    "apiGroup": "rbac.authorization.k8s.io",
+    "kind": "ClusterRole",
+    "name": "hello-operator"
+  },
+  "subjects": [
+    {
+      "kind": "ServiceAccount",
+      "name": "hello-operator",
+      "namespace": "default"
+    }
+  ]
+}
