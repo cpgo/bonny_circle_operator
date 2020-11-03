@@ -4,7 +4,7 @@ metadata:
   name: circle-name
   labels:
     circleId: "12312"
-    deploymentId: "456"
+    deploymentId: "uuid"
     fallbackCircle: fallback-id
     mesh: "ambassador"
 spec:
@@ -30,7 +30,7 @@ spec:
               image: docker.io/datawire/quote:0.4.1
               ports:
               - name: http
-                containerPort: 9090
+                containerPort: 8080
     - name: quiz-app-front
       metadata:
         name: quiz-app-front

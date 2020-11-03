@@ -103,12 +103,15 @@ defmodule HelloOperator.Controller.V1.Circle do
   @impl Bonny.Controller
   def modify(%{} = circle) do
     IO.inspect("MODIFY")
-    c = List.first(circle["spec"]["components"])
-    manifest = deployment_manifest(c)
-    operation = K8s.Client.update(manifest)
-    # IO.inspect(operation)
-    response = K8s.Client.run(operation, :default)
-    IO.inspect(response)
+
+    circle["spec"]["components"]
+    |> Enum.map(fn c ->
+      manifest = deployment_manifest(c)
+      operation = K8s.Client.update(manifest)
+      response = K8s.Client.run(operation, :default)
+      IO.inspect(response)
+    end)
+
     :ok
   end
 
@@ -129,16 +132,20 @@ defmodule HelloOperator.Controller.V1.Circle do
   @impl Bonny.Controller
   def reconcile(%{} = circle) do
     IO.inspect("RECONCILE")
-    c = List.first(circle["spec"]["components"])
-    manifest = deployment_manifest(c)
-    operation = K8s.Client.update(manifest)
-    # IO.inspect(operation)
-    response = K8s.Client.run(operation, :default)
-    IO.inspect(response)
+
+    circle["spec"]["components"]
+    |> Enum.map(fn c ->
+      deployment_manifest(c)
+      |> K8s.Client.update()
+      |> K8s.Client.run(:default)
+      |> IO.inspect()
+    end)
+
     :ok
   end
 
   def deployment_manifest(component) do
+    # K8s.Resource.build("apps/v1", "Deployment", %{label: 123})
     base = %{
       "apiVersion" => "apps/v1",
       "kind" => "Deployment"

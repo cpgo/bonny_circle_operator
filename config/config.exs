@@ -11,7 +11,6 @@ config :k8s,
 config :bonny,
   # Add each CRD Controller module for this operator to load here
   controllers: [
-    HelloOperator.Controller.V1.Greeting,
     HelloOperator.Controller.V1.Circle
   ],
 
