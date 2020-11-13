@@ -77,6 +77,15 @@ defmodule HelloOperator.Controller.V1.Circle do
   @rule {"", ["pods", "configmap"], ["*"]}
   @rule {"apps", ["deployments"], ["*"]}
 
+  @spec list_operation() :: K8s.Operation.t()
+  def list_operation() do
+    api_version = "apps/v1"
+    kind = "deployments"
+    client = __MODULE__.client()
+
+    client.list(api_version, kind)
+  end
+
   @doc """
   Handles an `ADDED` event
   """
@@ -90,7 +99,7 @@ defmodule HelloOperator.Controller.V1.Circle do
       manifest = deployment_manifest(c)
       operation = K8s.Client.create(manifest)
       response = K8s.Client.run(operation, :default)
-      IO.inspect(response)
+      # IO.inspect(response)
     end)
 
     :ok
@@ -109,7 +118,7 @@ defmodule HelloOperator.Controller.V1.Circle do
       manifest = deployment_manifest(c)
       operation = K8s.Client.update(manifest)
       response = K8s.Client.run(operation, :default)
-      IO.inspect(response)
+      # IO.inspect(response)
     end)
 
     :ok
@@ -122,6 +131,7 @@ defmodule HelloOperator.Controller.V1.Circle do
   @impl Bonny.Controller
   def delete(%{} = circle) do
     IO.inspect("DELETE")
+    # IO.inspect(circle)
     :ok
   end
 
@@ -132,14 +142,14 @@ defmodule HelloOperator.Controller.V1.Circle do
   @impl Bonny.Controller
   def reconcile(%{} = circle) do
     IO.inspect("RECONCILE")
-
-    circle["spec"]["components"]
-    |> Enum.map(fn c ->
-      deployment_manifest(c)
-      |> K8s.Client.update()
-      |> K8s.Client.run(:default)
-      |> IO.inspect()
-    end)
+    # IO.inspect(circle)
+    # circle["spec"]["components"]
+    # |> Enum.map(fn c ->
+    #   deployment_manifest(c)
+    #   |> K8s.Client.update()
+    #   |> K8s.Client.run(:default)
+    #   # |> IO.inspect()
+    # end)
 
     :ok
   end
